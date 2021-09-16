@@ -20,8 +20,10 @@ class Coin extends Equatable {
 
   factory Coin.fromMap(Map<String, dynamic> map) {
     return Coin(
-        name: map['CoinInfo']['Name'] as String,
-        fullName: map['CoinInfo']['FullName'] as String,
-        price: (map['RAW']['USD']['PRICE'] as num).toDouble());
+        name: map['CoinInfo']?['Name'] ?? '' as String,
+        fullName: map['CoinInfo']?['FullName'] ?? '' as String,
+        // if map raw doesnt have usd key then this becomes null and if usd
+        // doesnt have a price key then also null.
+        price: (map['RAW']?['USD']?['PRICE'] ?? 0).toDouble());
   }
 }

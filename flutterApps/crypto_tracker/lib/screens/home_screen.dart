@@ -11,6 +11,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  ScrollController? _scrollController;
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,44 +58,53 @@ class _HomeScreenState extends State<HomeScreen> {
                         print("Refresh");
                         context.read<CryptoBloc>().add(RefreshCoins());
                       },
-                      child: ListView.builder(
-                          // put ! to silence null error sine we already checked is snapshot
-                          // has data
-                          itemCount: state.coins.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            // index starts at 1 so ++
-                            final coin = state.coins[index];
-                            return ListTile(
-                              // wrapping texts inside a column to have both indices and text
-                              // centered (in leading)
-                              leading: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('${++index}',
-                                      style: TextStyle(
-                                          color: Theme.of(context).accentColor,
-                                          fontWeight: FontWeight.w600)),
-                                ],
-                              ),
-                              title: Text(
-                                coin.fullName,
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                              subtitle: Text(
-                                coin.name,
-                                style: const TextStyle(color: Colors.white70),
-                              ),
+                      // Notification listener keeps track of cursor postion
+                      // so we can load mroe coins at the bottom of the tablee
+                      child: NotificationListener<ScrollNotification>(
+                          // on scroll notification is defined below
+                          onNotification: (notification) =>
+                              _onScrollNotification(notification),
+                          child: ListView.builder(
+                              controller: _scrollController,
+                              // put ! to silence null error sine we already checked is snapshot
+                              // has data
+                              itemCount: state.coins.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                // index starts at 1 so ++
+                                final coin = state.coins[index];
+                                return ListTile(
+                                  // wrapping texts inside a column to have both indices and text
+                                  // centered (in leading)
+                                  leading: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('${++index}',
+                                          style: TextStyle(
+                                              color:
+                                                  Theme.of(context).accentColor,
+                                              fontWeight: FontWeight.w600)),
+                                    ],
+                                  ),
+                                  title: Text(
+                                    coin.fullName,
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                  subtitle: Text(
+                                    coin.name,
+                                    style:
+                                        const TextStyle(color: Colors.white70),
+                                  ),
 
-                              trailing: Text(
-                                // to string as fixed takes care of decimal positions.
-                                // the first $ is escaped to show the actual $ sign.
-                                "\$${coin.price.toStringAsFixed(4)}",
-                                style: TextStyle(
-                                    color: Theme.of(context).accentColor,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            );
-                          }));
+                                  trailing: Text(
+                                    // to string as fixed takes care of decimal positions.
+                                    // the first $ is escaped to show the actual $ sign.
+                                    "\$${coin.price.toStringAsFixed(4)}",
+                                    style: TextStyle(
+                                        color: Theme.of(context).accentColor,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                );
+                              })));
                 case CryptoStatus.error:
                   return Center(
                     child: Text(
@@ -102,5 +124,13 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           )),
     );
+  }
+
+  bool _onScrollNotification(ScrollNotification notif) {
+    if (notif is ScrollEndNotification &&
+        _scrollController!.position.extentAfter == 0) {
+      context.read<CryptoBloc>().add(LoadMoreCoins());
+    }
+    return false;
   }
 }

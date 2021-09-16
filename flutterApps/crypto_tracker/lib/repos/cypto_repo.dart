@@ -24,8 +24,9 @@ class CryptoRepo {
 
   // since we need to get a url, we will 'await' the data. and since we are waiting,
   // the type of func will be async
-  Future<List<Coin>> getTopCoins() async {
-    final requestUrl = '$_baseUrl/data/top/totalvolfull?limit=20&tsym=USD';
+  Future<List<Coin>> getTopCoins({required int page}) async {
+    final requestUrl =
+        '$_baseUrl/data/top/totalvolfull?limit=20&tsym=USD&page=$page';
     try {
       final response = await _httpClient.get(Uri.parse(requestUrl));
       if (response.statusCode == 200) {
