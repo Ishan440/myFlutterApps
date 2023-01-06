@@ -5,4 +5,7 @@ I created this repository to make as many projects as I can to improve on my Dev
 ## Crypto Currency Price Tracker
 This is a simple and responsive mobile application which displays the current prices of the top crypto currencies. The data for the prices and cryptocurrencies is taken from [cryptocompare's](https://www.cryptocompare.com) public API. The highlight of this applcation is that I experimented with Bloc State Management instead of the traditional Model-View-Controller pattern. Bloc is different in that it acts as a central unit for sending signals to different widgets as needed by using streams of events. You don't need to download a new library for Bloc, it comes within the flutter packages. 
 
+## Photos App
+This is a straightforward photo search and display app which uses [Unspash API](https://unsplash.com/developers) to query a topic the user wants images for and display the user results in a scrollable screen with images on cards.
+
 
