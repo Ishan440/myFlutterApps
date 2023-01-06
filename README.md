@@ -1,5 +1,5 @@
 # iOS and Android Applications with Flutter
-I have recently started wirking with Flutter and am enjoying the framework more than any I've used so far! 
+I have recently started working with Flutter and am enjoying the framework more than any I've used so far! 
 I created this repository to make as many projects as I can to improve on my Development and UI/UX skills! I will keep adding introductions and procedures as well as reflections on each project I make. I will also make sure that most of my code is well commented so that people can understand what's going on at each step! 
 
 ## Crypto Currency Price Tracker
